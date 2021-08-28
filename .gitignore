@@ -50,3 +50,8 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+## Para esse projeto
+*.log.md
+tmp.out
+!*.out.exp
