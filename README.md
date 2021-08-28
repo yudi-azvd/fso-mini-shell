@@ -4,7 +4,8 @@ Trabalho 1 de Fundamentos de Sistemas Operacionais: Mini Shell
 [Apresentação do trabalho em vídeo](https://www.youtube.com/watch?v=cHcr1EZdFao)
 (começa em 14:27).
 
-Uma versão experimental do mini-shell está [aqui](experiment/README.md).
+Uma versão experimental do mini-shell está [aqui](experiment/mini-shell.c) com uma breve [explicação](experiment/README.md) de como usar.
+
 
 ## Algumas direções
 ### Funções que podem ser úteis:
