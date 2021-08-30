@@ -1,15 +1,25 @@
 # Mini Shell - FSO
 Trabalho 1 de Fundamentos de Sistemas Operacionais: Mini Shell
 
-[Apresentação do trabalho em vídeo](https://www.youtube.com/watch?v=cHcr1EZdFao)
-(começa em 14:27).
+[Página inicial do trabalho](https://moj.naquadah.com.br/cgi-bin/contest.sh/bcr-FSO-2021_1-trabalho-001)
 
-Uma versão experimental do mini-shell está [aqui](experiment/mini-shell.c) com uma breve [explicação](experiment/README.md) de como usar.
+[PDF do problema](https://moj.naquadah.com.br/contests/bcr-FSO-2021_1-trabalho-001/fso-timedshell.pdf)
+
+[Apresentação informal do trabalho em vídeo](https://www.youtube.com/watch?v=cHcr1EZdFao)
+(começa em 14:27)
+
+Uma versão experimental do mini-shell está [aqui](experiment/mini-shell.c)
+com uma breve [explicação](experiment/README.md) de como usar.
+
+O código é compilado com
+
+    -O2 -static -lm
 
 
 ## Algumas direções
 ### Funções que podem ser úteis:
-[Docs](https://pubs.opengroup.org/onlinepubs/9699919799/functions/exec.html) da família de funções `exec`.
+[Docs](https://pubs.opengroup.org/onlinepubs/9699919799/functions/exec.html) da
+família de funções `exec`.
 
 - `execl`
 - `execve`
