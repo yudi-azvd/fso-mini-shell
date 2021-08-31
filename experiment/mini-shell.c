@@ -7,8 +7,8 @@
 #include <sys/wait.h>
 #include <sys/types.h>
 
-#define MAX_COMMAND_SIZE 50
-#define MAX_COMMAND_ARGS_SIZE 50
+#define MAX_COMMAND_SIZE 256
+#define MAX_COMMAND_ARGS_SIZE 256
 
 void timer_start(time_t* timer) {
   time(timer);
@@ -49,8 +49,9 @@ int main() {
       int there_was_error = execl(command, command_name, command_args, (char*) NULL);
       if (there_was_error) {
         printf("> Erro: %s\n", strerror(errno));
-        exit(1);
+        exit(errno);
       }
+      exit(0);
     }
     else {
       printf("> Não foi possível criar um processo.\n");
