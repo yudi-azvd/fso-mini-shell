@@ -6,22 +6,28 @@
 #include <errno.h>
 #include <sys/wait.h>
 #include <sys/types.h>
+#include <sys/time.h>
 #include <signal.h>
 
-#define MAX_COMMAND_SIZE 50
-#define MAX_COMMAND_ARGS_SIZE 50
+#define MAX_COMMAND_SIZE 256
+#define MAX_COMMAND_ARGS_SIZE 256
 
-void timer_start(time_t* timer) {
-  time(timer);
+struct timeval child_process_timer;
+
+void timer_start(struct timeval *timer) {
+  gettimeofday(timer, 0);
 }
 
-time_t timer_get_elapsed_time(time_t* timer) {
-  time_t now;
-  time(&now);
-  return now - *timer;
-}
+double timer_get_elapsed_time(struct timeval * timer) {
+  struct timeval now;
+  struct timeval elapsed;
+  
+  timer_start(&now);
 
-time_t child_process_timer;
+  long seconds = now.tv_sec - timer->tv_sec;
+  long microseconds = now.tv_usec - timer->tv_usec;
+  return seconds + microseconds*1e-6;
+}
 
 void start_child_timer(int signal){
   timer_start(&child_process_timer);
@@ -35,9 +41,9 @@ int main() {
   char command[MAX_COMMAND_SIZE];
   char command_args[MAX_COMMAND_ARGS_SIZE];
 
-  time_t child_elapsed_time,
-    parent_process_timer, parent_elapsed_time;
-  
+  struct timeval parent_process_timer;
+  double child_elapsed_time, parent_elapsed_time;
+
   timer_start(&parent_process_timer);
   while (scanf("%s", command) != EOF) {
     scanf("%s", command_args);
@@ -47,7 +53,7 @@ int main() {
     if (process > 0) {
       wait(&ps_status);
       child_elapsed_time = timer_get_elapsed_time(&child_process_timer);
-      printf("> Demorou %ld segundos, retornou %d\n", 
+      printf("> Demorou %.1f segundos, retornou %d\n", 
         child_elapsed_time, WEXITSTATUS(ps_status));
     }
     else if (process == 0) {
@@ -65,7 +71,7 @@ int main() {
   }
 
   parent_elapsed_time = timer_get_elapsed_time(&parent_process_timer);
-  printf(">> O tempo total foi de %ld segundos\n", parent_elapsed_time);
+  printf(">> O tempo total foi de %.1f segundos\n", parent_elapsed_time);
   
   return 0;
 }
