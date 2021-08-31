@@ -6,18 +6,24 @@
 #include <errno.h>
 #include <sys/wait.h>
 #include <sys/types.h>
+#include <sys/time.h>
 
 #define MAX_COMMAND_SIZE 256
 #define MAX_COMMAND_ARGS_SIZE 256
 
-void timer_start(time_t* timer) {
-  time(timer);
+typedef struct timeval timeval_t;
+
+void timer_start(timeval_t* timer) {
+  gettimeofday(timer, NULL);
 }
 
-time_t timer_get_elapsed_time(time_t* timer) {
-  time_t now;
-  time(&now);
-  return now - *timer;
+double timer_get_elapsed_time_seconds(timeval_t old) {
+  timeval_t now, elapsed;
+  gettimeofday(&now, NULL);
+  elapsed.tv_sec = now.tv_sec - old.tv_sec;
+  elapsed.tv_usec = now.tv_usec - old.tv_usec;
+  double seconds = elapsed.tv_sec + elapsed.tv_usec/1000000.0;
+  return seconds;
 }
 
 int main() {
@@ -27,40 +33,40 @@ int main() {
   char command_name[MAX_COMMAND_SIZE];
   char command_args[MAX_COMMAND_ARGS_SIZE];
 
-  time_t child_process_timer, child_elapsed_time,
-    parent_process_timer, parent_elapsed_time;
+  timeval_t child_timer, parent_timer;
+  double seconds_elapsed;
   
-  timer_start(&parent_process_timer);
+  timer_start(&parent_timer);
   while (scanf("%s", command) != EOF) {
-    strcpy(command_name, command); // deveria copiar apenas o nome do binário
     scanf("%s", command_args);
-    // printf("[%s] [%s]\n", command, command_args);
 
-    timer_start(&child_process_timer);
+    timer_start(&child_timer);
     process = fork();
 
     if (process > 0) {
       wait(&ps_status);
-      child_elapsed_time = timer_get_elapsed_time(&child_process_timer);
-      printf("> Demorou %ld segundos, retornou %d\n", 
-        child_elapsed_time, WEXITSTATUS(ps_status));
+      seconds_elapsed = timer_get_elapsed_time_seconds(child_timer);
+      printf("> Demorou %.1lf segundos, retornou %d\n", 
+        seconds_elapsed, WEXITSTATUS(ps_status));
+      fflush(stdout);
     }
     else if (process == 0) {
-      int there_was_error = execl(command, command_name, command_args, (char*) NULL);
+      int there_was_error = execl(command, command, command_args, (char*) NULL);
       if (there_was_error) {
         printf("> Erro: %s\n", strerror(errno));
         exit(errno);
       }
-      exit(0);
     }
     else {
       printf("> Não foi possível criar um processo.\n");
+      fflush(stdout);
       exit(1);
     }
   }
 
-  parent_elapsed_time = timer_get_elapsed_time(&parent_process_timer);
-  printf(">> O tempo total foi de %ld segundos\n", parent_elapsed_time);
+  seconds_elapsed = timer_get_elapsed_time_seconds(parent_timer);
+  printf(">> O tempo total foi de %.1lf segundos\n", seconds_elapsed);
+  fflush(stdout);
   
   return 0;
 }
