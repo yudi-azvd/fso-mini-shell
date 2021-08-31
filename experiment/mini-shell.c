@@ -55,9 +55,8 @@ int main() {
       int there_was_error = execl(command, command, command_args, NULL);
       if (there_was_error) {
         printf("> Erro: %s\n", strerror(errno));
-        exit(1);
+        exit(errno);
       }
-      exit(0);
     }
     else {
       printf("> Não foi possível criar um processo.\n");
