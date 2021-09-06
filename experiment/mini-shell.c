@@ -7,6 +7,8 @@
 #include <sys/wait.h>
 #include <sys/types.h>
 #include <sys/time.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 #include <signal.h>
 
 #define MAX_COMMAND_PATH_SIZE 256
@@ -18,8 +20,7 @@ typedef struct command
 {
     char path[MAX_COMMAND_PATH_SIZE];
     char args[MAX_COMMAND_ARGS_SIZE];
-}command_t;
-
+} command_t;
 
 void timer_start(struct timeval *timer)
 {
@@ -45,13 +46,13 @@ void start_child_timer(int signal)
 void manage_child(command_t *command)
 {
     kill(getppid(), SIGUSR1);
-    
+
     int there_was_error = execl(command->path, command->path, command->args, NULL);
-    
+
     if (there_was_error)
     {
         printf("> Erro: %s\n", strerror(errno));
-        fflush(stdout);
+        fclose(stdin);
         exit(errno);
     }
 }
@@ -64,7 +65,6 @@ void manage_parent()
     wait(&ps_status);
     child_elapsed_time = timer_get_elapsed_time(&child_process_timer);
     printf("> Demorou %.1f segundos, retornou %d\n", child_elapsed_time, WEXITSTATUS(ps_status));
-    fflush(stdout);
 }
 
 int main()
@@ -79,7 +79,7 @@ int main()
 
     timer_start(&parent_process_timer);
 
-    while (scanf("%s %s", command.path, command.args) != EOF)
+    while (scanf(" %s %s", command.path, command.args) != EOF)
     {
         process = fork();
 
@@ -90,14 +90,12 @@ int main()
         else
         {
             printf("> Não foi possível criar um processo.\n");
-            fflush(stdout);
             exit(1);
         }
+        fflush(stdout);
     }
 
     parent_elapsed_time = timer_get_elapsed_time(&parent_process_timer);
     printf(">> O tempo total foi de %.1f segundos\n", parent_elapsed_time);
-    fflush(stdout);
-
     return 0;
 }
