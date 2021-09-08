@@ -7,6 +7,8 @@
 #include <sys/wait.h>
 #include <sys/types.h>
 #include <sys/time.h>
+#include <fcntl.h>
+
 
 #define MAX_COMMAND_SIZE 256
 #define MAX_COMMAND_ARGS_SIZE 256
@@ -54,13 +56,14 @@ int main() {
       int there_was_error = execl(command, command, command_args, (char*) NULL);
       if (there_was_error) {
         printf("> Erro: %s\n", strerror(errno));
-        exit(errno);
+        fflush(stdout);
+        _exit(errno);
       }
     }
     else {
       printf("> Não foi possível criar um processo.\n");
       fflush(stdout);
-      exit(1);
+      _exit(errno);
     }
   }
 

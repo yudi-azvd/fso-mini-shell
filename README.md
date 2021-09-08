@@ -1,15 +1,12 @@
 # Mini Shell - FSO
 Um programa que simula um shell com funcionalidades muito básicas. Aceita
-o caminho de um programa com um argumento obrigatório. Exemplo:
+o caminho de um programa com um argumento obrigatório e imprime
+a saída do programa entrado pelo usuário no terminal. Exemplo:
 
     /bin/apt-get moo
 
 A saída será:
 
-    > Demorou 0.0 segundos, retornou 1
-    > Demorou 0.0 segundos, retornou 1
-    x86_64
-    > Demorou 0.0 segundos, retornou 0
                     (__) 
                     (oo) 
               /------\/ 
@@ -18,8 +15,6 @@ A saída será:
                ~~   ~~   
     ..."Have you mooed today?"...
     > Demorou 0.0 segundos, retornou 0
-    > Demorou 0.3 segundos, retornou 0
-    >> O tempo total foi de 0.3 segundos
 
 Para mais informações sobre o enunciado do problema consulte o 
 [PDF](https://moj.naquadah.com.br/contests/bcr-FSO-2021_1-trabalho-001/fso-timedshell.pdf), a 
@@ -72,3 +67,11 @@ do comando.
 [8 maneiras de medir tempo](https://levelup.gitconnected.com/8-ways-to-measure-execution-time-in-c-c-48634458d0f9).
 
 [clock_t no stackoverflow](https://stackoverflow.com/questions/3557221/how-do-i-measure-time-in-c)
+
+
+## Continuação/evolução do mini shell
+[Mais funcionalidades](https://web2.clarkson.edu/class/cs444/assignments/shell/)
+de outras universidades.
+
+[Mais inspiração](https://brennan.io/2015/01/16/write-a-shell-in-c/)
+se precisar de ajuda.
